@@ -1,50 +1,20 @@
 import { Elysia, t } from "elysia";
-import { client } from "./clients/client";
 import { postCreateShort } from "./modules/postShortLink";
+import { getHelloElysia } from "./modules/getHelloElysia";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = new Elysia()
+  .use(getHelloElysia)
   .use(postCreateShort)
-  .post(
-    "/body",
-    async ({ body }) => {
-      console.log(body);
-    },
-    // {
-    //   body: t.Object({
-    //     // name: t.String(),
-    //   }),
-    // },
-  )
+  .post("/body", async ({ body }) => {
+    console.log(body);
+  })
   .post("/", ({ body, query, headers }) => {
     return { body, query, headers };
   })
-
-  // .onBeforeHandle(({ body, status }) => {
-  //   if (!body.name) {
-  //     return status(401);
-  //   }
-  // })
-  .post(
-    "/createshortlink",
-    async ({ body }) => {
-      // return `Hello ${name}!`
-      console.log(body.name);
-      // return body
-      // await client.set("hello", name);
-      // const result = await client.get("hello");
-      return body;
-    },
-    {
-      body: t.Object({
-        name: t.String(),
-      }),
-    },
-  )
-  .get("/hello/:name?", async ({ params: { name } }) => {
-    console.log(name);
-    return name;
-  })
-  .listen(3000);
+  .listen(process.env.PORT || 3000);
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
