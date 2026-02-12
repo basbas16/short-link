@@ -1,1 +1,1 @@
-web: bun short-link-backend/src/app.ts
+web: bun src/app.ts
